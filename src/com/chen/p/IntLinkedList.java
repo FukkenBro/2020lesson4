@@ -8,22 +8,28 @@ public class IntLinkedList implements IntList, IntQueue, IntStack {
     private Entry first;
     private Entry last;
 
-    private static class Entry {
-        int data;
-        Entry previous;
-        Entry next;
-
-        public Entry(int value) {
-            this.data = value;
+    private Entry getEntry(int index) {
+        if (index == 0) {
+            return first;
+        }
+        if (index == size) {
+            return last;
+        }
+        if (index < size / 2) {
+            Entry tmp = first;
+            for (int i = 0; i < index; i++) {
+                tmp = tmp.next;
+            }
+            return tmp;
+        } else {
+            Entry tmp = last;
+            int n = size - 1;
+            for (int i = 0; i < n - index; i++) {
+                tmp = tmp.previous;
+            }
+            return tmp;
         }
 
-        protected void setPrevious(Entry previous) {
-            this.previous = previous;
-        }
-
-        protected void setNext(Entry next) {
-            this.next = next;
-        }
     }
 
     private void validateIndex(int index) throws Exception {
@@ -116,27 +122,24 @@ public class IntLinkedList implements IntList, IntQueue, IntStack {
         }
     }
 
-    private Entry getEntry(int index) {
-        if (index == 0) {
-            return first;
-        }
+    @Override
+    public boolean remove(int index) throws Exception {
+        validateSize();
+        validateIndex(index);
         if (index == size) {
-            return last;
-        }
-        if (index < size / 2) {
-            Entry tmp = first;
-            for (int i = 0; i < index; i++) {
-                tmp = tmp.next;
-            }
-            return tmp;
+            last = last.previous;
+            last.setNext(null);
+        } else if (index == 0) {
+            first = getEntry(1);
+            first.setPrevious(null);
         } else {
-            Entry tmp = last;
-            int n = size - 1;
-            for (int i = n; i > index; i--) {
-                tmp = tmp.previous;
-            }
-            return tmp;
+            Entry prevIndex = this.getEntry(index - 1);
+            Entry nextIndex = this.getEntry(index + 1);
+            prevIndex.setNext(nextIndex);
+            nextIndex.setPrevious(prevIndex);
         }
+        size--;
+        return true;
     }
 
     @Override
@@ -162,33 +165,53 @@ public class IntLinkedList implements IntList, IntQueue, IntStack {
     }
 
     @Override
-    public boolean remove(int index) throws Exception {
+    public boolean removeByValue(int value) throws Exception {
+        Entry tmpHead = first;
+        Entry tmpTail = last;
+        int n = size - 1;
+        for (int i = 0, j = n; i < j; i++, j--) {
+            if (tmpHead.data == value) {
+                remove(i);
+                return true;
+            }
+            if (tmpTail.data == value) {
+                remove(j);
+                return true;
+            }
+            tmpHead = tmpHead.next;
+            tmpTail = tmpTail.previous;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean set(int index, int data) throws Exception {
         validateSize();
         validateIndex(index);
-        if (index == size) {
-            last = getEntry(size - 1);
-            last.setNext(null);
-        } else if (index == 0) {
-            first = getEntry(1);
-            first.setPrevious(null);
-        } else {
-            Entry prevIndex = this.getEntry(index - 1);
-            Entry nextIndex = this.getEntry(index + 1);
-            prevIndex.setNext(nextIndex);
-            nextIndex.setPrevious(prevIndex);
-        }
-        size--;
+        getEntry(index).setData(data);
         return true;
     }
 
-    @Override
-    public boolean removeByValue(int value) {
-        return false;
-    }
+    private static class Entry {
+        int data;
+        Entry previous;
+        Entry next;
 
-    @Override
-    public boolean set(int index, int element) {
-        return false;
+        public Entry(int value) {
+            this.data = value;
+        }
+
+        protected void setPrevious(Entry previous) {
+            this.previous = previous;
+        }
+
+        protected void setNext(Entry next) {
+            this.next = next;
+        }
+
+        protected void setData(int data) {
+            this.data = data;
+        }
     }
 
     @Override

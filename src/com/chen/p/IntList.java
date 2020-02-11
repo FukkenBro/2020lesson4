@@ -14,9 +14,9 @@ public interface IntList {
 
     boolean remove(int index) throws Exception;
 
-    boolean removeByValue(int value);
+    boolean removeByValue(int value) throws Exception;
 
-    boolean set(int index, int element);
+    boolean set(int index, int element) throws Exception;
 
     int size();
 
