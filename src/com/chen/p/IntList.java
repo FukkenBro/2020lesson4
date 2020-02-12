@@ -20,7 +20,7 @@ public interface IntList {
 
     int size();
 
-    IntList subList(int fromIndex, int toIndex);
+    IntList subList(int fromIndex, int toIndex) throws Exception;
 
     int[] toArray();
 

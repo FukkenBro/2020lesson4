@@ -220,22 +220,35 @@ public class IntLinkedList implements IntList, IntQueue, IntStack {
     }
 
     @Override
-    public IntList subList(int fromIndex, int toIndex) {
-        return null;
+    public IntList subList(int fromIndex, int toIndex) throws Exception {
+        int n = toIndex - fromIndex;
+        if (n < 0) {
+            throw new Exception("Invalid range");
+        }
+        IntLinkedList tmp = new IntLinkedList();
+        Entry tmpEntry = getEntry(fromIndex);
+        for (int i = 0; i <= n; i++) {
+            tmp.add(tmpEntry.data);
+            tmpEntry = tmpEntry.next;
+        }
+        return tmp;
     }
 
     @Override
-    public boolean push(int value) {
-        return false;
+    public boolean push(int value) throws Exception {
+        add(0, value);
+        return true;
     }
 
     @Override
-    public int pop() {
-        return 0;
+    public int pop() throws Exception {
+        Entry tmp = first;
+        remove(0);
+        return tmp.data;
     }
 
     @Override
     public int peek() {
-        return 0;
+        return first.data;
     }
 }
