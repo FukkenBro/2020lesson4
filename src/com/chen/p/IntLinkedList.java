@@ -148,14 +148,15 @@ public class IntLinkedList implements IntList, IntQueue, IntStack {
     }
 
     @Override
-    public int remove() {
-
-        return 0;
+    public int remove() throws Exception {
+        Entry tmp = first;
+        remove(0);
+        return tmp.data;
     }
 
     @Override
     public int element() {
-        return 0;
+        return first.data;
     }
 
 
